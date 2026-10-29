@@ -46,7 +46,7 @@ PRIORITY_ZONE_TYPE = "priority"
 # Tiny tie-breaking bonus (never changes the integer turn count) so that,
 # among several equally-cheap routes, the search prefers the one that
 # passes through 'priority' zones, as requested by the map design.
-_PRIORITY_BIAS = 1e-4
+_PRIORITY_BIAS = 0.0
 
 # Hard safety cap on how many turns a single-drone search is allowed to
 # explore. Generous enough for every provided map (including 25-drone
@@ -347,9 +347,10 @@ class Pathfinder:
         return True
 
     def _distances_to(self, target: str) -> dict[str, float]:
-        """Static (capacity-ignoring) Dijkstra distance from every zone
-        to `target`, used as an admissible A* heuristic. Cached per
-        target since the graph topology is fixed for the whole run.
+        """Compute capacity-ignoring Dijkstra distances to `target`.
+
+        Used as an admissible A* heuristic. Cached per target since the
+        graph topology is fixed for the whole run.
         """
         if target in self._heuristic_cache:
             return self._heuristic_cache[target]
